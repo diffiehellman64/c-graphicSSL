@@ -3,10 +3,10 @@
 #include <ncurses.h>
 
 char *choices[] = { 
-			"Create root CA",
-			"Create intermediate CA",
-			"Create certificate",
-			"Exit",
+			"Create root CA",		//1
+			"Create intermediate CA",	//2
+			"Create certificate",		//3
+			"Exit",				//4
 		  };
 int n_choices = sizeof(choices) / sizeof(char *);
 void print_menu(WINDOW *menu_win, int highlight);
@@ -94,7 +94,7 @@ void input_str()//(WINDOW *input_box)
 	input_win = newwin(15, 15, 15, 15);
 	char mesg[]="Enter a string: ";
 	mvprintw(input_win, 3, 3, "%s", mesg);
-	wrefresh(menu_win);
+	wrefresh(input_win);
 }
 
 int main()
