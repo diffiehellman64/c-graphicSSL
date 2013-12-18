@@ -88,7 +88,7 @@ void print_menu(WINDOW *menu_win, int highlight)
 	wrefresh(menu_win);
 }
 
-void input_str()//(WINDOW *input_box)
+/*void input_str()//(WINDOW *input_box)
 {
 	WINDOW *input_win;
 	input_win = newwin(15, 15, 15, 15);
@@ -96,15 +96,15 @@ void input_str()//(WINDOW *input_box)
 	mvprintw(input_win, 3, 3, "%s", mesg);
 	wrefresh(input_win);
 }
-
+*/
 int main()
 {
 	initscr();
 	clear();
 	mvprintw(1, 15, "Graphic SSL");
-	input_str();
-//	int action = menu_action();
-//	mvprintw(50, 15, "You chose choice %d", action);
+//	input_str();
+	int action = menu_action();
+	mvprintw(50, 15, "You chose choice %d", action);
 	getch();
 	refresh();
 	endwin();
