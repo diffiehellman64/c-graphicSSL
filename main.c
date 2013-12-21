@@ -88,6 +88,16 @@ void print_menu(WINDOW *menu_win, int highlight)
 	wrefresh(menu_win);
 }
 
+void input_str(char msg[])
+{
+ char str[80];
+ initscr();                             /* start the curses mode */
+ mvprintw(2, 2, "%s", msg);
+                                /* print the message at the center of the screen */
+ getstr(str);
+ mvprintw(LINES - 2, 0, "You Entered: %s", str);
+}
+
 /*void input_str()//(WINDOW *input_box)
 {
 	WINDOW *input_win;
@@ -103,8 +113,10 @@ int main()
 	clear();
 	mvprintw(1, 15, "Graphic SSL");
 //	input_str();
-	int action = menu_action();
-	mvprintw(50, 15, "You chose choice %d", action);
+//	int action = menu_action();
+//	mvprintw(50, 15, "You chose choice %d", action);
+	input_str("sdf ");
+//	mvprintw(50, 15, "You entered %s", str);
 	getch();
 	refresh();
 	endwin();
