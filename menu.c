@@ -10,19 +10,19 @@ char *choices[] = {
                         "Create intermediate CA",
                         "Create certificate",
                         "Exit",
-                        (char *)NULL,
                   };
 void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color);
 
-int get_max_elem(char* arr)
-{	int count_elem;
-	int i;
-	count_elem = ARRAY_SIZE(arr);
-	for (i = 1; i < count_elem; ++i)
-	{
-		printf("%s", "ok");
-	}
-	return count_elem;
+int get_max_elem(char *arr[], int count)
+{
+        int i;
+        int max_len = 0;
+        for (i = 0; i < count; ++i)
+        {
+                if (strlen(arr[i]) > max_len)
+                        max_len = strlen(arr[i]);
+        }
+        return max_len;
 }
 
 
@@ -31,41 +31,38 @@ int main()
 	MENU *my_menu;
         WINDOW *my_menu_win;
 	int c;	
-        int n_choices, i;
+        int n_choices, i, width;
+        int row, col;
 	
-	int test = get_max_elem(*choices);
-	printf("%d", test);
-	getch();
 	/* Initialize curses */
 	initscr();
+	getmaxyx(stdscr,row,col);
 	start_color();
         cbreak();
         noecho();
 	init_pair(1, COLOR_RED, COLOR_BLACK);
 
-	/* Create items */
-        n_choices = ARRAY_SIZE(choices);
-        my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *));
+        n_choices = ARRAY_SIZE(choices);				// вычисляем количество пунктов меню
+	width = get_max_elem(choices, n_choices);			// вычисляем размеры главного экрана
+        my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *));		// выделяем память
         for(i = 0; i < n_choices; ++i)
-                my_items[i] = new_item(choices[i], NULL);
+                my_items[i] = new_item(choices[i], NULL);		// инициализируем пункты меню
 
-	/* Crate menu */
-	my_menu = new_menu((ITEM **)my_items);
+	my_menu = new_menu((ITEM **)my_items);				// создаем меню
 
-	/* Create the window to be associated with the menu */
-        my_menu_win = newwin(10, 60, 4, 4);
+        my_menu_win = newwin(n_choices + 6, width + 9, row/3, (col - width)/2);	// создаем окно для меню
         keypad(my_menu_win, TRUE);
      
 	/* Set main window and sub window */
         set_menu_win(my_menu, my_menu_win);
-        set_menu_sub(my_menu, derwin(my_menu_win, 6, 38, 4, 2));
+        set_menu_sub(my_menu, derwin(my_menu_win, 6, width + 3, 4, 2));
 
 	/* Set menu mark to the string " * " */
         set_menu_mark(my_menu, " > ");
 
 	/* Print a border around the main window and print a title */
         box(my_menu_win, 0, 0);
-	print_in_middle(my_menu_win, 1, 0, 60, "Select action", COLOR_PAIR(1));
+	print_in_middle(my_menu_win, 1, 0, width + 8, "Select action", COLOR_PAIR(1));
 //	mvwaddch(my_menu_win, 2, 0, ACS_LTEE);
 	mvwhline(my_menu_win, 2, 1, ACS_HLINE, 38);
 //	mvwaddch(my_menu_win, 2, 39, ACS_RTEE);

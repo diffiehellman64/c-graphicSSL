@@ -1,34 +1,32 @@
 #include <menu.h>
 #include <string.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-#define CTRLD   4
+#define CTRLD 	4
 
 char *choices[] = {
                         "Create root CA",
                         "Create intermediate CA",
                         "Create certificate",
                         "Exit",
-                        (char *)NULL,
                   };
-void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color);
 
-int get_max_elem(char *arr)
-{       int count_elem;
-	int length_str;
-        int i;
-        count_elem = ARRAY_SIZE(arr);
-        for (i = 1; i < count_elem; ++i)
-        {
-	//	length_str = strlen(arr[i]);	
-                printf("%s\n", *arr[i]);
-        }
-        return count_elem;
+int get_max_elem(char *arr[], int count)
+{
+	int i;
+	int max_len = 0;
+	for (i = 0; i < count; ++i)
+	{
+		if (strlen(arr[i]) > max_len)
+			max_len = strlen(arr[i]);
+	}
+	return max_len;
 }
 
 int main()
-{	get_max_elem(*choices);
-	return 0;
+{
+	int choices_count = ARRAY_SIZE(choices);
+	int len = get_max_elem(choices, choices_count);
+	printf ("%d\n", len);
 }
