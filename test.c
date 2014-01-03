@@ -8,25 +8,70 @@
 char *choices[] = {
                         "Create root CA",
                         "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Test test test Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
+                        "Create intermediate CA",
                         "Create certificate",
                         "Exit",
+                        "Test test test test Create intermediate CA",
                   };
 
-int get_max_elem(char *arr[], int count)
+int get_max_elem(char *arr[])
 {
 	int i;
 	int max_len = 0;
-	for (i = 0; i < count; ++i)
+	while (arr[i])
 	{
 		if (strlen(arr[i]) > max_len)
 			max_len = strlen(arr[i]);
+		++i;
 	}
 	return max_len;
 }
 
+int get_quantity_elem(char *arr[])
+{
+	int i = 0;
+	while (arr[i])
+	{
+		printf ("%s\n", arr[i]);
+		++i;
+	}
+	return i;
+}
+
 int main()
 {
-	int choices_count = ARRAY_SIZE(choices);
-	int len = get_max_elem(choices, choices_count);
-	printf ("%d\n", len);
+//	int choices_count = ARRAY_SIZE(choices);
+//	int len = get_max_elem(choices, choices_count);
+//	printf ("%d\n", len);
+	int max_elem = get_max_elem(choices);
+//	get_quantity_elem(choices);
+	printf ("%d\n", max_elem);	
 }

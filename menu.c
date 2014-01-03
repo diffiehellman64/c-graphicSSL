@@ -5,13 +5,13 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define CTRLD 	4
 
-char *choices[] = {
-                        "Create root CA",
+char *choices[] = {	"Create root CA",
                         "Create intermediate CA",
                         "Create certificate",
-                        "Exit",
-                  };
+                        "Exit"	};
+
 void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color);
+int get_max_elem(char *arr[], int count);
 
 int get_max_elem(char *arr[], int count)
 {
@@ -25,8 +25,20 @@ int get_max_elem(char *arr[], int count)
         return max_len;
 }
 
+/*int get_max_elem(char *arr[])
+{
+	int i;
+	int max_len = 0;
+	while (arr[i])
+	{
+		if (strlen(arr[i]) > max_len)
+			max_len = strlen(arr[i]);
+		++i;
+	}
+	return max_len;
+}*/
 
-int main()
+void menu_render()
 {	ITEM **my_items;
 	MENU *my_menu;
         WINDOW *my_menu_win;
@@ -34,13 +46,10 @@ int main()
         int n_choices, i, width;
         int row, col;
 	
-	/* Initialize curses */
-	initscr();
 	getmaxyx(stdscr,row,col);
-	start_color();
         cbreak();
         noecho();
-	init_pair(1, COLOR_RED, COLOR_BLACK);
+	init_pair(1, COLOR_YELLOW, COLOR_BLACK);
 
         n_choices = ARRAY_SIZE(choices);				// вычисляем количество пунктов меню
 	width = get_max_elem(choices, n_choices);			// вычисляем размеры главного экрана
@@ -55,17 +64,15 @@ int main()
      
 	/* Set main window and sub window */
         set_menu_win(my_menu, my_menu_win);
-        set_menu_sub(my_menu, derwin(my_menu_win, 6, width + 3, 4, 2));
-
-	/* Set menu mark to the string " * " */
-        set_menu_mark(my_menu, " > ");
+        set_menu_sub(my_menu, derwin(my_menu_win, n_choices + 2, width + 3, 4, 2));
+        set_menu_mark(my_menu, " > ");					// Set menu mark to the string " > "
 
 	/* Print a border around the main window and print a title */
         box(my_menu_win, 0, 0);
 	print_in_middle(my_menu_win, 1, 0, width + 8, "Select action", COLOR_PAIR(1));
-//	mvwaddch(my_menu_win, 2, 0, ACS_LTEE);
-	mvwhline(my_menu_win, 2, 1, ACS_HLINE, 38);
-//	mvwaddch(my_menu_win, 2, 39, ACS_RTEE);
+	mvwaddch(my_menu_win, 2, 0, ACS_LTEE);
+	mvwhline(my_menu_win, 2, 1, ACS_HLINE, width + 7);
+	mvwaddch(my_menu_win, 2, width + 8, ACS_RTEE);
 	mvprintw(LINES - 2, 0, "F1 to exit");
 	refresh();
         
@@ -90,8 +97,6 @@ int main()
         free_menu(my_menu);
         for(i = 0; i < n_choices; ++i)
                 free_item(my_items[i]);
-	endwin();
-	return 0;
 }
 
 void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
@@ -115,4 +120,16 @@ void print_in_middle(WINDOW *win, int starty, int startx, int width, char *strin
 	mvwprintw(win, y, x, "%s", string);
 	wattroff(win, color);
 	refresh();
+}
+
+int main ()
+{
+	initscr();							// Initialize curses
+	start_color();
+	init_pair(2, COLOR_BLUE, COLOR_BLACK);
+	wattron(stdscr, COLOR_PAIR(2));
+	mvprintw(2, 10, "Graphic OpenSSL");
+	menu_render();
+	endwin();
+	return 0;
 }
