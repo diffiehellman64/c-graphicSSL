@@ -30,8 +30,7 @@ int get_choice(char *choices[], int choices_count, char *title)
 	int ch = 1;	
 	int ti;
 
-	getmaxyx(stdscr,row,col);
-	mvwprintw(stdscr, 4, 10, "row = %d | col = %d", row, col);
+	mvwprintw(stdscr, 4, 10, "row = %d | col = %d", LINES, COLS);
         cbreak();
         noecho();
 //	init_pair(2, COLOR_YELLOW, COLOR_MAGENTA);
@@ -54,7 +53,7 @@ int get_choice(char *choices[], int choices_count, char *title)
 
 	my_menu = new_menu((ITEM **)my_items);				// создаем меню
 
-        my_menu_win = newwin(n_choices + 6, width + 7, row - 40, (col - width)/2);	// создаем окно для меню
+        my_menu_win = newwin(n_choices + 6, width + 7, LINES - 40, (COLS - width)/2);	// создаем окно для меню
         keypad(my_menu_win, TRUE);
     	
 	/* Set main window and sub window */
@@ -137,22 +136,26 @@ void create_ca(char *ca_name)
 	
 }
 
-char *get_ca_name()
+char *get_string(char *title)
 {
-	//init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+//	init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
+//      cbreak();
+//      noecho();
         WINDOW *my_win;
-        my_win = newwin(6, 17, 40, 12);			// создаем окно для меню
+	int w = 25;
+	int h = 5;
+        my_win = newwin(h, w, (LINES - h) / 2, (COLS - w) / 2);			// создаем окно для меню
         keypad(my_win, TRUE);
         box(my_win, 0, 0);
-	print_in_middle(my_win, 1, 0, 4, "Ok", COLOR_PAIR(1));
+	print_in_middle(my_win, 1, 0, w, title, COLOR_PAIR(1));
 	mvwaddch(my_win, 2, 0, ACS_LTEE);
-	mvwhline(my_win, 2, 1, ACS_HLINE, 5);
-	mvwaddch(my_win, 2, 6, ACS_RTEE);
+	mvwhline(my_win, 2, 1, ACS_HLINE, w - 2);
+	mvwaddch(my_win, 2, w - 1, ACS_RTEE);
 	wrefresh(my_win);
-//	char *name;		// = malloc(10);
-//	strcpy(name, "asdasdasdsadasd Ooo YEAH!!!");	
-//	return name;
-	getch();
+	char *name;		// = malloc(10);
+	strcpy(name, "asdasdasdsadasd Ooo YEAH!!!");	
+	return name;
+//	getch();
 }
 
 int main ()
@@ -178,7 +181,7 @@ int main ()
 	{
 		case 1:
 			//printf("\n%s\n", "Create CA start...");
-			ca_name = get_ca_name();
+			ca_name = get_string("Enter CA name");
 			break;
 		case 2:
 			ca_name = "ok";
