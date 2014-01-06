@@ -139,12 +139,20 @@ void create_ca(char *ca_name)
 
 char *get_ca_name()
 {
+	//init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
         WINDOW *my_win;
         my_win = newwin(6, 17, 40, 12);			// создаем окно для меню
         keypad(my_win, TRUE);
-	char *name;		// = malloc(10);
-	strcpy(name, "asdasdasdsadasd Ooo YEAH!!!");	
-	return name;
+        box(my_win, 0, 0);
+	print_in_middle(my_win, 1, 0, 4, "Ok", COLOR_PAIR(1));
+	mvwaddch(my_win, 2, 0, ACS_LTEE);
+	mvwhline(my_win, 2, 1, ACS_HLINE, 5);
+	mvwaddch(my_win, 2, 6, ACS_RTEE);
+	wrefresh(my_win);
+//	char *name;		// = malloc(10);
+//	strcpy(name, "asdasdasdsadasd Ooo YEAH!!!");	
+//	return name;
+	getch();
 }
 
 int main ()
