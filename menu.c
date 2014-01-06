@@ -139,7 +139,10 @@ void create_ca(char *ca_name)
 
 char *get_ca_name()
 {
-	char *name = malloc(10);
+        WINDOW *my_win;
+        my_win = newwin(6, 17, 40, 12);			// создаем окно для меню
+        keypad(my_win, TRUE);
+	char *name;		// = malloc(10);
 	strcpy(name, "asdasdasdsadasd Ooo YEAH!!!");	
 	return name;
 }
