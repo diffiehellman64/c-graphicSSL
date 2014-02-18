@@ -23,15 +23,12 @@ int get_max_elem(char *arr[], int count)
 
 int get_choice(char *choices[], int choices_count, char *title)
 {	
-
-	//setlocale(LC_CTYPE, "");
 	setlocale(LC_ALL,"");
 	ITEM **my_items;
 	MENU *my_menu;
         WINDOW *my_menu_win;
 	int c;	
         int n_choices, i, width;
-//        int row, col;
 	int ch = 1;	
 	int ti;
 
@@ -39,8 +36,6 @@ int get_choice(char *choices[], int choices_count, char *title)
         cbreak();
         noecho();
 	curs_set(0);
-//	init_pair(2, COLOR_YELLOW, COLOR_MAGENTA);
-//	init_pair(1, COLOR_MAGENTA, COLOR_CYAN);
 	init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
 
         n_choices = choices_count;
@@ -144,9 +139,6 @@ void create_ca(char *ca_name)
 
 char *get_string(char *title)
 {
-//	init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
-//      cbreak();
-//      noecho();
         WINDOW *my_win;
 	int w = 25;
 	int h = 5;
@@ -158,22 +150,11 @@ char *get_string(char *title)
 	mvwhline(my_win, 2, 1, ACS_HLINE, w - 2);
 	mvwaddch(my_win, 2, w - 1, ACS_RTEE);
 	wrefresh(my_win);
-	char *name;		// = malloc(10);
-	strcpy(name, "asdasdasdsadasd Ooo YEAH!!!");	
+	char *name = malloc(512);
+	char mesg[]="Enter a string: ";		/* message to be appeared on the screen */
+	mvprintw(LINES/2,(COLS-strlen(mesg))/2,"%s",mesg);
+	getstr(name);
 	return name;
-//	getch();
-/* File path: basics/scanw_example.c */
- char mesg[]="Enter a string: ";		/* message to be appeared on the screen */
- char str[80];
- int row,col;				/* to store the number of rows and *
-					 * the number of colums of the screen */
- initscr();				/* start the curses mode */
- getmaxyx(stdscr,row,col);		/* get the number of rows and columns */
- mvprintw(row/2,(col-strlen(mesg))/2,"%s",mesg);
-                     		/* print the message at the center of the screen */
- getstr(str);
- mvprintw(23, 0, "You Entered: %s", str);
- getch();
 }
 
 int main ()
@@ -183,7 +164,7 @@ int main ()
         	                "Create inwdsfsfsdfsdftermediate CA",
         	                "123456789012345678901234567890",
         	                "123456789012345678901234567890",
-        	               // "123456789012345678901234567890",
+        //	                "123456789012345678901234567890",
         	                "Create intermediate CA",
         	                "Crdsfsdfsdfsdfsdfsdfsdfsdfsdfsdfeate intermediate CA",
                 	        "Create certificate",
@@ -198,7 +179,6 @@ int main ()
 	switch(ch)
 	{
 		case 1:
-			//printf("\n%s\n", "Create CA start...");
 			ca_name = get_string("Enter CA name");
 			break;
 		case 2:
@@ -212,6 +192,6 @@ int main ()
 	endwin();
 	printf("Selected: %d (%s)\n", ch, choices[ch - 1]);
 	printf("CA name: %s\n", ca_name);
-	//free(ca_name);
+	free(ca_name);
 	return 0;
 }
