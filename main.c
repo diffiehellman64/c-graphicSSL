@@ -140,6 +140,9 @@ void create_ca(char *ca_name)
 char *get_string(char *title)
 {
         WINDOW *my_win;
+	clear();
+	echo();
+	curs_set(1);
 	int w = 25;
 	int h = 5;
         my_win = newwin(h, w, (LINES - h) / 2, (COLS - w) / 2);			// создаем окно для меню
@@ -150,9 +153,8 @@ char *get_string(char *title)
 	mvwhline(my_win, 2, 1, ACS_HLINE, w - 2);
 	mvwaddch(my_win, 2, w - 1, ACS_RTEE);
 	wrefresh(my_win);
-	char *name = malloc(512);
-	char mesg[]="Enter a string: ";		/* message to be appeared on the screen */
-	mvprintw(LINES/2,(COLS-strlen(mesg))/2,"%s",mesg);
+	char *name = malloc(64);
+	move(LINES/2, COLS/2);
 	getstr(name);
 	return name;
 }
