@@ -15,24 +15,22 @@ int get_max_elem(char *arr[], int count)
         int max_len = 0;
         for (i = 0; i < count; ++i)
         {
-                if (strlen(arr[i]) > max_len)
+                if (strlen(arr[i]) > max_len) {
                         max_len = strlen(arr[i]);
+		}
         }
         return max_len;
 }
 
 int get_choice(char *choices[], int choices_count, char *title)
 {	
-	setlocale(LC_ALL,"");
 	ITEM **my_items;
 	MENU *my_menu;
         WINDOW *my_menu_win;
 	int c;	
         int n_choices, i, width;
 	int ch = 1;	
-	int ti;
 
-	mvwprintw(stdscr, 4, 10, "row = %d | col = %d", LINES, COLS);
         cbreak();
         noecho();
 	curs_set(0);
@@ -40,13 +38,6 @@ int get_choice(char *choices[], int choices_count, char *title)
 
         n_choices = choices_count;
 	width = get_max_elem(choices, n_choices);			// вычисляем размеры самой большой строки в массиве
-	
-	for (ti = 0; ti < n_choices; ++ti)
-	{
-		mvwprintw(stdscr, ti + 6, 10, "%d -> %d", ti, strlen(choices[ti]));
-	}
-
-	mvwprintw(stdscr, 5, 10, "width = %d ", width);
 
         my_items = (ITEM **)calloc(n_choices, sizeof(ITEM *));		// выделяем память
         for(i = 0; i < n_choices; ++i)
@@ -54,20 +45,20 @@ int get_choice(char *choices[], int choices_count, char *title)
 
 	my_menu = new_menu((ITEM **)my_items);				// создаем меню
 
-        my_menu_win = newwin(n_choices + 6, width + 7, LINES - 40, (COLS - width)/2);	// создаем окно для меню
+        my_menu_win = newwin(n_choices + 4, width + 4, 10, (COLS - width)/2);	// создаем окно для меню
         keypad(my_menu_win, TRUE);
     	
 	/* Set main window and sub window */
         set_menu_win(my_menu, my_menu_win);
-        set_menu_sub(my_menu, derwin(my_menu_win, n_choices, width + 3, 4, 1));
-        set_menu_mark(my_menu, " > ");					// Set menu mark to the string " > "
+        set_menu_sub(my_menu, derwin(my_menu_win, n_choices, width, 3, 2));
+        set_menu_mark(my_menu, NULL);
 
 	/* Print a border around the main window and print a title */
         box(my_menu_win, 0, 0);
 	print_in_middle(my_menu_win, 1, 0, width + 4, title, COLOR_PAIR(1));
 	mvwaddch(my_menu_win, 2, 0, ACS_LTEE);
-	mvwhline(my_menu_win, 2, 1, ACS_HLINE, width + 5);
-	mvwaddch(my_menu_win, 2, width + 6, ACS_RTEE);
+	mvwhline(my_menu_win, 2, 1, ACS_HLINE, width + 2);
+	mvwaddch(my_menu_win, 2, width + 3, ACS_RTEE);
 	mvprintw(LINES - 2, 3, "press ENTER for choice action");
 	refresh();
         
@@ -106,12 +97,14 @@ int get_choice(char *choices[], int choices_count, char *title)
         free_menu(my_menu);
         for(i = 0; i < n_choices; ++i)
                 free_item(my_items[i]);
+	wclear(my_menu_win);
+	refresh();
 	return ch;
 }
 
 void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
 {	int length, x, y;
-	float temp;
+	int temp;
 
 	if(win == NULL)
 		win = stdscr;
@@ -124,8 +117,9 @@ void print_in_middle(WINDOW *win, int starty, int startx, int width, char *strin
 		width = 80;
 
 	length = strlen(string);
+
 	temp = (width - length)/ 2;
-	x = startx + (int)temp;
+	x = startx + temp;
 	wattron(win, color);
 	mvwprintw(win, y, x, "%s", string);
 	wattroff(win, color);
@@ -139,34 +133,45 @@ void create_ca(char *ca_name)
 
 char *get_string(char *title)
 {
-        WINDOW *my_win;
-	clear();
+        WINDOW *win;
+//	clear();
 	echo();
 	curs_set(1);
-	int w = 25;
+	int w = 35;
 	int h = 5;
-        my_win = newwin(h, w, (LINES - h) / 2, (COLS - w) / 2);			// создаем окно для меню
-        keypad(my_win, TRUE);
-        box(my_win, 0, 0);
-	print_in_middle(my_win, 1, 0, w, title, COLOR_PAIR(1));
-	mvwaddch(my_win, 2, 0, ACS_LTEE);
-	mvwhline(my_win, 2, 1, ACS_HLINE, w - 2);
-	mvwaddch(my_win, 2, w - 1, ACS_RTEE);
-	wrefresh(my_win);
+        win = newwin(h, w, 10, (COLS - w) / 2);			// создаем окно для меню
+        keypad(win, TRUE);
+        box(win, 0, 0);
+	print_in_middle(win, 1, 0, w, title, COLOR_PAIR(1));
+	mvwaddch(win, 2, 0, ACS_LTEE);
+	mvwhline(win, 2, 1, ACS_HLINE, w - 2);
+	mvwaddch(win, 2, w - 1, ACS_RTEE);
+	wrefresh(win);
 	char *name = malloc(64);
-	move(LINES/2, COLS/2);
+	move(13, COLS/2 - w/2 + 2);
 	getstr(name);
 	return name;
 }
 
 int main ()
 {
+	setlocale(LC_ALL,"");
+//	setlocale(LC_CTYPE,"C-UTF-8");
 	char *ca_name;
 	char *choices[] = {	"Create root CA",
         	                "Create inwdsfsfsdfsdftermediate CA",
         	                "123456789012345678901234567890",
         	                "123456789012345678901234567890",
-        //	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
+        	                "123456789012345678901234567890",
         	                "Create intermediate CA",
         	                "Crdsfsdfsdfsdfsdfsdfsdfsdfsdfsdfeate intermediate CA",
                 	        "Create certificate",
@@ -176,7 +181,7 @@ int main ()
 	start_color();
 	init_pair(2, COLOR_BLUE, COLOR_BLACK);
 	wattron(stdscr, COLOR_PAIR(2));
-	mvprintw(2, 10, "Graphic OpenSSL");
+	mvprintw(2, 10, "C - Graphic OpenSSL");
 	int ch = get_choice(choices, ARRAY_SIZE(choices), "Select action");
 	switch(ch)
 	{
@@ -194,6 +199,6 @@ int main ()
 	endwin();
 	printf("Selected: %d (%s)\n", ch, choices[ch - 1]);
 	printf("CA name: %s\n", ca_name);
-	free(ca_name);
+//	free(ca_name);
 	return 0;
 }
